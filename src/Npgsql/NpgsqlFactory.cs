@@ -24,6 +24,7 @@
 
 using System;
 using System.Data.Common;
+using System.Data.Entity.Infrastructure;
 #if ENTITIES6
 using System.Data.Entity.Core.Common;
 #endif
@@ -34,12 +35,12 @@ namespace Npgsql
 	/// A factory to create instances of various Npgsql objects.
 	/// </summary>
 	[Serializable]
-	public sealed class NpgsqlFactory : DbProviderFactory, IServiceProvider
+    public sealed class NpgsqlFactory : DbProviderFactory, IServiceProvider, IDbConnectionFactory
 	{
 		public static NpgsqlFactory Instance = new NpgsqlFactory();
 
 
-		private NpgsqlFactory()
+		public NpgsqlFactory()
 		{
 		}
 
@@ -91,5 +92,10 @@ namespace Npgsql
 		}
 
 		#endregion
-	}
+
+        public DbConnection CreateConnection(string nameOrConnectionString)
+        {
+            return new NpgsqlConnection(nameOrConnectionString);
+        }
+    }
 }
